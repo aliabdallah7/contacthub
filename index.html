@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="./images/contacts.png" />
+    <title>ContactHub - Smart Contact Manager</title>
+    <!-- Bootstrap -->
+    <link
+      rel="stylesheet"
+      href="./css/bootstrap.min.css"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="./css/all.min.css"
+    />
+    <!-- The font family -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="app-header">
+      <div class="wrap d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <div class="logo-box"><i class="fa-solid fa-address-book"></i></div>
+          <div>
+            <h1 class="brand mb-0">Contact<span>Hub</span></h1>
+            <div class="brand-sub">Smart Contact Manager</div>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-3 gap-sm-4">
+          <button class="btn btn-brand" id="addBtn">
+            <i class="fa-solid fa-plus me-2"></i
+            ><span class="d-none d-sm-inline">Add Contact</span
+            ><span class="d-sm-none">Add</span>
+          </button>
+          <i class="fa-solid fa-bell head-ic d-none d-md-block"></i>
+          <i class="fa-solid fa-gear head-ic d-none d-md-block"></i>
+          <img
+            class="profile-img"
+            alt="Profile"
+            src="./images/avatar-4.png"
+          />
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap py-4 py-lg-5">
+      <!-- Stats -->
+      <div class="row g-3 g-lg-4 mb-4 mb-lg-5">
+        <div class="col-12 col-md-4">
+          <div class="stat-card">
+            <div class="stat-icon g-blue">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div>
+              <div class="stat-label">Total</div>
+              <div class="stat-num" id="totalCount">0</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="stat-card">
+            <div class="stat-icon g-orange">
+              <i class="fa-solid fa-star"></i>
+            </div>
+            <div>
+              <div class="stat-label">Favorites</div>
+              <div class="stat-num" id="favCount">0</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="stat-card">
+            <div class="stat-icon g-red">
+              <i class="fa-solid fa-heart-pulse"></i>
+            </div>
+            <div>
+              <div class="stat-label">Emergency</div>
+              <div class="stat-num" id="emCount">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="layout">
+        <!-- All contacts -->
+        <section>
+          <h2 class="sec-title">All Contacts</h2>
+          <p class="sec-sub" id="allSub">Manage and organize your 0 contacts</p>
+          <div class="search-box mb-4">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input
+              type="search"
+              id="searchInput"
+              placeholder="Search by name, phone, or email..."
+            />
+          </div>
+          <div class="row g-3" id="contactsList"></div>
+        </section>
+
+        <!-- Sidebar -->
+        <aside class="d-flex flex-column gap-4">
+          <div class="side-card">
+            <div class="side-head fav-head">
+              <div class="side-icon g-orange">
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <div>
+                <div class="side-title">Favorites</div>
+                <div class="side-sub">Quick access to starred contacts</div>
+              </div>
+            </div>
+            <div class="side-body" id="favList"></div>
+          </div>
+          <div class="side-card">
+            <div class="side-head em-head">
+              <div class="side-icon g-red">
+                <i class="fa-solid fa-heart-pulse"></i>
+              </div>
+              <div>
+                <div class="side-title">Emergency</div>
+                <div class="side-sub">Important contacts for urgent calls</div>
+              </div>
+            </div>
+            <div class="side-body" id="emList"></div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <!-- Add / Edit modal -->
+    <div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title" id="modalTitle">Add New Contact</h2>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="contactForm" novalidate>
+              <div class="text-center mb-4">
+                <div class="photo-preview mx-auto" id="photoPreview">
+                  <i class="fa-solid fa-user"></i>
+                </div>
+                <label for="photoInput" class="btn-photo"
+                  ><i class="fa-solid fa-camera me-2"></i>Change Photo</label
+                >
+                <input type="file" id="photoInput" accept="image/*" hidden />
+              </div>
+              <div class="mb-4">
+                <label class="form-label" for="name"
+                  >Full Name <span class="req">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  maxlength="50"
+                  placeholder="Enter full name"
+                />
+                <div class="invalid-feedback">
+                  Name should contain only letters and spaces (2-50 characters)
+                </div>
+              </div>
+              <div class="mb-4">
+                <label class="form-label" for="phone"
+                  >Phone Number <span class="req">*</span></label
+                >
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="phone"
+                  placeholder="e.g., 01012345678"
+                />
+                <div class="invalid-feedback" id="phoneFeedback">
+                  Please enter a valid Egyptian phone number
+                </div>
+              </div>
+              <div class="mb-4">
+                <label class="form-label" for="email">Email Address</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="email"
+                  placeholder="name@example.com"
+                />
+                <div class="invalid-feedback">
+                  Please enter a valid email address
+                </div>
+              </div>
+              <div class="mb-4">
+                <label class="form-label" for="address">Address</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="address"
+                  placeholder="Enter address"
+                />
+              </div>
+              <div class="mb-4">
+                <label class="form-label" for="group">Group</label>
+                <select class="form-select" id="group">
+                  <option value="">Select a group</option>
+                  <option>Family</option>
+                  <option>Friends</option>
+                  <option>Work</option>
+                  <option>School</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="mb-4">
+                <label class="form-label" for="notes">Notes</label>
+                <textarea
+                  class="form-control"
+                  id="notes"
+                  rows="3"
+                  placeholder="Add notes about this contact"
+                ></textarea>
+              </div>
+              <div class="d-flex flex-wrap gap-4 mb-4">
+                <div class="form-check d-flex align-items-center gap-2 p-0">
+                  <input
+                    class="form-check-input m-0"
+                    type="checkbox"
+                    id="isFav"
+                  />
+                  <label class="form-check-label" for="isFav"
+                    ><i class="fa-solid fa-star text-warning me-1"></i
+                    >Favorite</label
+                  >
+                </div>
+                <div class="form-check d-flex align-items-center gap-2 p-0">
+                  <input
+                    class="form-check-input m-0"
+                    type="checkbox"
+                    id="isEm"
+                  />
+                  <label class="form-check-label" for="isEm"
+                    ><i class="fa-solid fa-heart-pulse text-danger me-1"></i
+                    >Emergency</label
+                  >
+                </div>
+              </div>
+              <div class="d-flex gap-3">
+                <button
+                  type="button"
+                  class="btn btn-cancel flex-fill"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+                <button type="submit" class="btn btn-brand flex-fill">
+                  <i class="fa-solid fa-check me-2"></i>Save Contact
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js"></script>
+    <script src="./js/script.js"></script>
+  </body>
+</html>
